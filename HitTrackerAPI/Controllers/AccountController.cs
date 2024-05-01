@@ -6,13 +6,15 @@ namespace HitTrackerAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AccountController(IAccountRepository accountRepository) : ControllerBase
+public class AccountController(IAccountRepository accountRepo) : ControllerBase
 {
     [HttpPost("CreateAccount")]
     public async Task<IActionResult> CreateAccount(int id)
     {
-        //Todo check if already exists
-        await accountRepository.CreateAccount(new Account { AccountId = id });
+        if (await accountRepo.GetAccount(id) != null)
+            return BadRequest("Account with the given ID already exists");
+
+        await accountRepo.CreateAccount(new Account { AccountId = id });
         return Ok();
     }
 }
