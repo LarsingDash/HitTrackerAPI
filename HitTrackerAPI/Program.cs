@@ -26,13 +26,6 @@ public static class Program
         //Seeding database
         SeedDb.SeedDatabase(app);
 
-        //Swagger
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
         //Final config and run
         Configurator.ConfigureApp(app);
         app.Run();
