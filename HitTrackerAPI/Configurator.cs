@@ -1,4 +1,6 @@
-﻿namespace HitTrackerAPI
+﻿using HitTrackerAPI.Repositories;
+
+namespace HitTrackerAPI
 {
     public class Configurator(IServiceCollection services)
     {
@@ -18,7 +20,7 @@
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            // m_services.AddScoped<IPmUserRepository, PmUserRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
 
             services.AddLogging(builder =>
             {
