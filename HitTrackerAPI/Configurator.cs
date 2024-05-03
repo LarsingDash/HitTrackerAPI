@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HitTrackerAPI.Repositories;
+using HitTrackerAPI.Repositories.AccountRepositories;
 using Microsoft.OpenApi.Models;
 
 namespace HitTrackerAPI
