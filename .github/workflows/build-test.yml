@@ -26,8 +26,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    
+    - name: Build API
+      run: dotnet build --configuration Release --no-restore HitTrackerAPI/HitTrackerAPI.csproj
+
+    - name: Build Test Project
+      run: dotnet build --configuration Debug --no-restore HitTrackerTest/HitTrackerTest.csproj
+
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal HitTrackerTest/HitTrackerTest.csproj
