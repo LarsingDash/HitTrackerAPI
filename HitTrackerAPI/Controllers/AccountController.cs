@@ -1,7 +1,6 @@
 ﻿using HitTrackerAPI.Models;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace HitTrackerAPI.Controllers;
 
@@ -17,13 +16,15 @@ public class AccountController(IAccountRepository accountRepo) : ControllerBase
     [HttpPost("CreateAccount")]
     public async Task<IActionResult> CreateAccount()
     {
-        // if (await accountRepo.GetAccount(id) != null)
-            // return BadRequest("Account with the given ID already exists");
+        //Find first available ID
+        var id = 0;
+        while (await accountRepo.GetAccount(id) != null) id++;
 
-        // if (await accountRepo.CreateAccount(new Account { AccountId = id }))
-            // return Ok();
-        // return BadRequest("Error creating account");
-
-        return BadRequest("Not implemented");
+        //Create account with the ID
+        if (await accountRepo.CreateAccount(new Account { AccountId = id }))
+            return Ok(id);
+        
+        //Error
+        return BadRequest("Error creating account");
     }
 }

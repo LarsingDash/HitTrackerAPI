@@ -23,13 +23,19 @@ public class AccountControllerTests
     public async Task CreateAccount()
     {
         //Create the account
-        var result = await _controller.CreateAccount();
+        var firstResult = await _controller.CreateAccount();
 
         //Assert that the result was Ok
-        Assert.That(result, Is.Not.EqualTo(null));
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        Assert.That(firstResult, Is.Not.EqualTo(null));
+        Assert.That(firstResult, Is.InstanceOf<OkObjectResult>());
 
         //Assert that the account (with ID 2) was successfully created
-        Assert.That((result as OkObjectResult)!.Value, Is.EqualTo("2"));
+        Assert.That((firstResult as OkObjectResult)!.Value, Is.EqualTo(2));
+        
+        //  ----- Try the same again to make sure (now ID 3 should be created)
+        var secondResult = await _controller.CreateAccount();
+        Assert.That(secondResult, Is.Not.EqualTo(null));
+        Assert.That(secondResult, Is.InstanceOf<OkObjectResult>());
+        Assert.That((secondResult as OkObjectResult)!.Value, Is.EqualTo(3));
     }
 }

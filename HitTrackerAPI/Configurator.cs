@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using HitTrackerAPI.Repositories;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using Microsoft.OpenApi.Models;
 
@@ -39,7 +38,7 @@ namespace HitTrackerAPI
 
             services.AddLogging(builder =>
             {
-                builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+                builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);
             });
         }
 
