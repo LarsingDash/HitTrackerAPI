@@ -45,7 +45,7 @@ jobs:
       - name: Docker Build Push
         uses: docker/build-push-action@v5.3.0
         with:
-          context: "{{defaultContext}}:HitTrackerAPI"
+          context: ./HitTrackerAPI
           push: true
           tags: larsingdash/hit_tracker_api:latest
           file: ./Dockerfile
