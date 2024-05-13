@@ -47,4 +47,7 @@ jobs:
         with:
           push: true
           tags: larsingdash/hit_tracker_api:latest
-          dockerfile: HitTrackerAPI/HitTrackerAPI/Dockerfile
+          dockerfile: ./HitTrackerAPI/HitTrackerAPI/Dockerfile
+          context: ./HitTrackerAPI
+        working-directory: ./HitTrackerAPI
+
