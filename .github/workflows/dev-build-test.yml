@@ -26,7 +26,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore HitTrackerAPI/HitTrackerAPI.csproj
 
       - name: Build Test Project
-        run: dotnet build --configuration Release --no-restore HitTrackerTest/HitTrackerTest.csproj
+        run: dotnet build --configuration Debug --no-restore HitTrackerTest/HitTrackerTest.csproj
 
       - name: Test
         run: dotnet test --no-build --verbosity normal HitTrackerTest/HitTrackerTest.csproj
