@@ -16,8 +16,8 @@ public static class Program
         //Db Context
         builder.Services.AddDbContext<HitTrackerContext>(options =>
         {
-            var connectionString = builder.Configuration.GetConnectionString("hit_tracker");
-            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            options.UseInMemoryDatabase(builder.Configuration.GetConnectionString("hit_tracker") ??
+                                        throw new Exception("Could not not find connection string"));
         });
 
         //Build

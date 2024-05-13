@@ -1,0 +1,46 @@
+name: Build - Test - Push
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build_test_push:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.201
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build API
+        run: dotnet build --configuration Release --no-restore HitTrackerAPI/HitTrackerAPI.csproj
+
+      - name: Build Test Project
+        run: dotnet build --configuration Release --no-restore HitTrackerTest/HitTrackerTest.csproj
+
+      - name: Test
+        id: test
+        run: dotnet test --no-build --verbosity normal HitTrackerTest/HitTrackerTest.csproj
+
+      - name: Docker Login
+        if: ${{ steps.test.outcome == 'success' }}
+        uses: docker/login-action@v3.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Build Push
+        uses: docker/build-push-action@v5.3.0
+        with:
+          push: true
+          tags: larsingdash/hit_tracker_api:latest
