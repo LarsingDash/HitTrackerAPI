@@ -1,8 +1,6 @@
-﻿using HitTrackerAPI.Database;
-using HitTrackerAPI.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using HitTrackerAPI.Models;
 
-namespace HitTrackerAPI;
+namespace HitTrackerAPI.Database;
 
 public static class SeedDb
 {
@@ -17,7 +15,7 @@ public static class SeedDb
         if (context.Accounts.Any())
             return;
 
-        var account0 = new Account { AccountId = 0 };
+        var account0 = new Account { AccountId = 0};
         var account1 = new Account { AccountId = 1 };
 
         context.Accounts.AddRange(new List<Account> { account0, account1 });
