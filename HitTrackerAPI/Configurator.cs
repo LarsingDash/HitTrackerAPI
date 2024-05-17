@@ -45,11 +45,8 @@ namespace HitTrackerAPI
         public static void ConfigureApp(WebApplication app)
         {
             //Swagger
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "HitTracker V1"); });
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "HitTracker V1"); });
 
             //API
             app.UseHttpsRedirection();
