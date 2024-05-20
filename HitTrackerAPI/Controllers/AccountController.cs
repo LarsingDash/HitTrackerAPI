@@ -33,7 +33,7 @@ public class AccountController(IAccountRepository accountRepo) : ControllerBase
     /// </summary>
     /// <param name="accountId">Id of the wanted account</param>
     /// <response code="200">The account that was fetched</response>
-    /// <response code="400">No account was found with the given id</response>
+    /// <response code="404">No account was found with the given id</response>
     [HttpGet]
     public async Task<IActionResult> GetAccount(int accountId)
     {

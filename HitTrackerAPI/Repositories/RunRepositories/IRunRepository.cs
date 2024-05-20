@@ -14,7 +14,7 @@ public interface IRunRepository
     Task<Run?> GetRun(int id);
     
     /// <summary>
-    /// Creates the given run
+    /// Creates a run with the given name on the given account
     /// </summary>
     /// <param name="account">The account which will receive the new run</param>
     /// <param name="name">The name of the run that will be entered into the database</param>
