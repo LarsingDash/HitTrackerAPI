@@ -1,20 +1,36 @@
 using HitTrackerAPI.Controllers;
-using HitTrackerAPI.Models;
+using HitTrackerAPI.Database;
 using HitTrackerAPI.Repositories.AccountRepositories;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace HitTrackerTest;
 
 public class AccountControllerTests
 {
-    private readonly IAccountRepository _repository = new AccountMock();
-    private AccountController _controller;
+    private AccountRepository _repository = null!;
+    private AccountController _controller = null!;
 
+    private HitTrackerContext _context = null!;
+    
     [OneTimeSetUp]
-    public void AccountControllerSetup()
+    public void Setup()
     {
+        var options = new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
+        _context = new HitTrackerContext(options);
+        
+        _repository = new AccountRepository(_context);
         _controller = new AccountController(_repository);
+        
+        SeedDb.SeedingRun(_context);
+    }
+    
+    [OneTimeTearDown]
+    public void Teardown()
+    {
+        _context.Database.EnsureDeleted();
+        _context.Dispose();
     }
 
     //Tries to create an account
