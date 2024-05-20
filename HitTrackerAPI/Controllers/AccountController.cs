@@ -27,4 +27,17 @@ public class AccountController(IAccountRepository accountRepo) : ControllerBase
         //Error
         return BadRequest("Error creating account");
     }
+
+    /// <summary>
+    /// Gets an account
+    /// </summary>
+    /// <param name="accountId">Id of the wanted account</param>
+    /// <response code="200">The account that was fetched</response>
+    /// <response code="400">No account was found with the given id</response>
+    [HttpGet]
+    public async Task<IActionResult> GetAccount(int accountId)
+    {
+        var account = await accountRepo.GetAccount(accountId);
+        return account != null ? Ok(account) : NotFound($"No account with {accountId} found");
+    }
 }
