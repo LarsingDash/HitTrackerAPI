@@ -24,9 +24,7 @@ public class RunRepository(HitTrackerContext context) : IRunRepository
         await context.SaveChangesAsync();
 
         Console.WriteLine($"Created run: {result.Entity}");
-
-        // await context.Runs.ForEachAsync(Console.WriteLine); //Debug print
-
+        
         //Return id of newly created run
         return result.Entity.RunId;
     }

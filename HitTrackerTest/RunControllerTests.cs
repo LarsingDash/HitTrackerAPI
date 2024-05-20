@@ -2,7 +2,6 @@
 using HitTrackerAPI.Database;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,8 +38,10 @@ public class RunControllerTests
     }
 
     //--------------- Create Run  ---------------
-    //Tries to create the run "Elden Ring" on an account
-    //The mock repository has the accounts 0 and 1, account 0 has the run "Dark Souls"
+    /// <summary>
+    /// Tries to create the run "Elden Ring" on an account
+    /// The mock repository has the accounts 0 and 1, account 0 has the run "Dark Souls"
+    /// </summary>
     [Test]
     public async Task CreateRun_Happy()
     {
@@ -64,8 +65,10 @@ public class RunControllerTests
         );
     }
 
-    //Tries to create Dark Souls an account that already has it
-    //Should return with an error message indicating such
+    /// <summary>
+    /// Tries to create Dark Souls an account that already has it
+    /// Should return with an error message indicating such
+    /// </summary>
     [Test]
     public async Task CreateRun_SameOnAccount()
     {
@@ -80,8 +83,10 @@ public class RunControllerTests
         Assert.That((result as ObjectResult)!.StatusCode!, Is.EqualTo(500));
     }
 
-    //Tries to create Dark Souls an account, while another already has it 
-    //Should return still be allowed
+    /// <summary>
+    /// Tries to create Dark Souls an account, while another already has it 
+    /// Should return still be allowed
+    /// </summary>
     [Test]
     public async Task CreateRun_SameDifferentAccount()
     {

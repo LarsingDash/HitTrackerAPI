@@ -1,5 +1,4 @@
-﻿using HitTrackerAPI.Models;
-using HitTrackerAPI.Repositories.AccountRepositories;
+﻿using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using Microsoft.AspNetCore.Mvc;
 

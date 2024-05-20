@@ -1,6 +1,4 @@
-﻿using HitTrackerAPI.Repositories;
-
-namespace HitTrackerAPI.Database;
+﻿namespace HitTrackerAPI.Database;
 
 public static class SeedDb
 {
@@ -18,6 +16,7 @@ public static class SeedDb
 
         context.Accounts.AddRange(mock.Accounts);
         context.Runs.AddRange(mock.Runs);
+        context.Splits.AddRange(mock.Splits);
         context.SaveChanges();
     }
 }

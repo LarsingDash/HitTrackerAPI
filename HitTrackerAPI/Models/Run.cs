@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HitTrackerAPI.Models;
 
@@ -10,7 +9,7 @@ namespace HitTrackerAPI.Models;
 ///     <item><see cref="Name"/></item>
 /// </list>
 /// </summary>
-public class Run
+public sealed class Run
 {
     /// <summary>
     /// Unique identifier for each run
@@ -21,10 +20,11 @@ public class Run
     /// <summary>
     /// Name for the run, also has to be unique
     /// </summary>
-    public string Name { get; init; }
-
-    public override string ToString()
-    {
-        return $"Run {RunId}: {Name}";
-    }
+    [MaxLength(35)]
+    public string Name { get; init; } = null!;
+    
+    /// <summary>
+    /// Splits on a run
+    /// </summary>
+    public ICollection<Split>? Splits { get; init; }
 }

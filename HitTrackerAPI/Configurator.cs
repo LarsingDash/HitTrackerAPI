@@ -35,9 +35,11 @@ namespace HitTrackerAPI
                 c.IncludeXmlComments(xmlPath);
             });
 
+            //Scoping repositories
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRunRepository, RunRepository>();
 
+            //Setting logging level
             services.AddLogging(builder =>
             {
                 builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Information);

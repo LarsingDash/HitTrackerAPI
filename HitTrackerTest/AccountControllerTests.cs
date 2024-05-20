@@ -1,6 +1,5 @@
 using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
-using HitTrackerAPI.Models;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +34,10 @@ public class AccountControllerTests
     }
 
     //--------------- Create Account ---------------
-    //Tries to create an account
-    //Since the mock repository has the accounts 0 and 1, this should make an account with ID 2
+    /// <summary>
+    /// Tries to create an account
+    /// Since the mock repository has the accounts 0 and 1, this should make an account with ID 2
+    /// </summary>
     [Test]
     public async Task CreateAccount()
     {
@@ -50,7 +51,7 @@ public class AccountControllerTests
         //Assert that the account (with ID 2) was successfully created
         Assert.That((firstResult as OkObjectResult)!.Value, Is.EqualTo(2));
         
-        //  ----- Try the same again to make sure (now ID 3 should be created)
+        //Try the same again to make sure (now ID 3 should be created)
         var secondResult = await _controller.CreateAccount();
         Assert.That(secondResult, Is.Not.EqualTo(null));
         Assert.That(secondResult, Is.InstanceOf<OkObjectResult>());
@@ -58,8 +59,10 @@ public class AccountControllerTests
     }
     
     //--------------- Get Account ---------------
-    //Tries to fetch an account with a correct and bad id
-    //Correct should return OkObjectResult, bad should return NotFoundObjectResult
+    /// <summary>
+    /// Tries to fetch an account with a correct and bad id
+    /// Correct should return OkObjectResult, bad should return NotFoundObjectResult
+    /// </summary>
     [Test]
     public async Task GetAccount()
     {
@@ -67,7 +70,7 @@ public class AccountControllerTests
         var correct = await _controller.GetAccount(0);
         Assert.That(correct, Is.InstanceOf<OkObjectResult>());
         
-        //Correct
+        //Bad
         var bad = await _controller.GetAccount(10);
         Assert.That(bad, Is.InstanceOf<NotFoundObjectResult>());
     }

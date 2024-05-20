@@ -3,14 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HitTrackerAPI.Database;
 
-public class HitTrackerContext : DbContext
+public class HitTrackerContext(DbContextOptions<HitTrackerContext> option) : DbContext(option)
 {
-    public HitTrackerContext(DbContextOptions<HitTrackerContext> option) : base(option)
-    {
-    }
-
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<Run> Runs { get; set; }
+    // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+    public DbSet<Account> Accounts { get; init; } = null!;
+    public DbSet<Run> Runs { get; init; } = null!;
+    public DbSet<Split> Splits { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,5 +16,6 @@ public class HitTrackerContext : DbContext
 
         modelBuilder.Entity<Account>();
         modelBuilder.Entity<Run>();
+        modelBuilder.Entity<Split>();
     }
 }
