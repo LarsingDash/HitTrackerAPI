@@ -66,7 +66,7 @@ public class RunControllerTests
     }
 
     /// <summary>
-    /// Tries to create Dark Souls an account that already has it
+    /// Tries to create Dark Souls on an account that already has it
     /// Should return with an error message indicating such
     /// </summary>
     [Test]
@@ -84,7 +84,7 @@ public class RunControllerTests
     }
 
     /// <summary>
-    /// Tries to create Dark Souls an account, while another already has it 
+    /// Tries to create Dark Souls on an account, while another already has it 
     /// Should return still be allowed
     /// </summary>
     [Test]
@@ -97,7 +97,7 @@ public class RunControllerTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.InstanceOf<OkObjectResult>());
 
-        //Ensure error
+        //Get run form repo
         var run = await _runRepository.GetRun((int)(result as OkObjectResult)!.Value!);
         Assert.That(run, Is.Not.EqualTo(null));
     }
