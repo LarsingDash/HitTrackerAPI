@@ -1,5 +1,6 @@
 using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
+using HitTrackerAPI.Models;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ public class AccountControllerTests
         _context.Dispose();
     }
 
+    //--------------- Create Account ---------------
     //Tries to create an account
     //Since the mock repository has the accounts 0 and 1, this should make an account with ID 2
     [Test]
@@ -53,5 +55,20 @@ public class AccountControllerTests
         Assert.That(secondResult, Is.Not.EqualTo(null));
         Assert.That(secondResult, Is.InstanceOf<OkObjectResult>());
         Assert.That((secondResult as OkObjectResult)!.Value, Is.EqualTo(3));
+    }
+    
+    //--------------- Get Account ---------------
+    //Tries to fetch an account with a correct and bad id
+    //Correct should return OkObjectResult, bad should return NotFoundObjectResult
+    [Test]
+    public async Task GetAccount()
+    {
+        //Correct
+        var correct = await _controller.GetAccount(0);
+        Assert.That(correct, Is.InstanceOf<OkObjectResult>());
+        
+        //Correct
+        var bad = await _controller.GetAccount(10);
+        Assert.That(bad, Is.InstanceOf<NotFoundObjectResult>());
     }
 }
