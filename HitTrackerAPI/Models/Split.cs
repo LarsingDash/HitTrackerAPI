@@ -22,4 +22,9 @@ public sealed class Split
     /// </summary>
     [MaxLength(35)]
     public string Name { get; init; } = null!;
+    
+    public override string ToString()
+    {
+        return $"SplitId: {SplitId}, Name: {Name}";
+    }
 }

@@ -16,15 +16,20 @@ public sealed class Run
     /// </summary>
     [Key]
     public int RunId { get; init; }
-    
+
     /// <summary>
     /// Name for the run, also has to be unique
     /// </summary>
     [MaxLength(35)]
     public string Name { get; init; } = null!;
-    
+
     /// <summary>
     /// Splits on a run
     /// </summary>
     public ICollection<Split>? Splits { get; init; }
+
+    public override string ToString()
+    {
+        return $"RunId: {RunId}, Name: {Name}, Splits: [{string.Join(", ", Splits ?? [])}]";
+    }
 }

@@ -1,4 +1,5 @@
-﻿using HitTrackerAPI.Controllers;
+﻿using System.Text.Json;
+using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
@@ -39,57 +40,54 @@ public class SplitControllerTests
 
     //--------------- Create Split  ---------------
     /// <summary>
-    /// Tries to create the split "Bull" on Sekiro on account 0
-    /// The run doesn't have this split, so the created split should be id 4
+    /// Happy
+    ///     Tries to create the split "Bull" on Sekiro on account 0
+    ///     This should create a split with id 4
+    /// Duplicate
+    ///     Tries to create Ogre split on an account that already has it
+    ///     This should return with an error message indicating such
+    /// Different
+    ///     Tries to create an "Ogre" a run, while another run already has it
+    ///     This should still be allowed
     /// </summary>
     [Test]
-    public async Task CreateSplit_Happy()
+    public async Task CreateSplit()
     {
+        // ----- HAPPY
         //Create "Bull" split in Sekiro
-        var result = await _splitController.CreateSplit(0, 2, "Bull");
-        
-        //Safety Checks
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        
-        //Check result of createSplit
-        Assert.That((result as OkObjectResult)!.Value, Is.EqualTo(4));
-    }
-    
-    /// <summary>
-    /// Tries to create Ogre split on an account that already has it
-    /// Should return with an error message indicating such
-    /// </summary>
-    [Test]
-    public async Task CreateSplit_SameOnRun()
-    {
-        //Create "Bull" split in Sekiro
-        var result = await _splitController.CreateSplit(0, 2, "Ogre");
-        
-        //Safety Checks
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<ObjectResult>());
-        
-        //Ensure error
-        Assert.That((result as ObjectResult)!.StatusCode!, Is.EqualTo(500));
-    }
-    
-    /// <summary>
-    /// Tries to create an "Ogre" a run, while another run already has it 
-    /// Should return still be allowed
-    /// </summary>
-    [Test]
-    public async Task CreateSplit_SameDifferentAccount()
-    {
-        //Create run
-        var result = await _splitController.CreateSplit(0, 1, "Ogre");
+        var happy = await _splitController.CreateSplit(0, 2, "Bull");
+        TestsHelper.SafetyChecks(happy);
 
-        //Safety Checks
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        //Check result of CreateSplit
+        Assert.That((happy as OkObjectResult)!.Value, Is.EqualTo(4));
+        
+        // ----- Duplicate
+        //Create "Bull" split in Sekiro
+        var duplicate = await _splitController.CreateSplit(0, 2, "Ogre");
+        TestsHelper.SafetyChecks<ObjectResult>(duplicate);
+
+        //Ensure error
+        Assert.That((duplicate as ObjectResult)!.StatusCode!, Is.EqualTo(500));
+        
+        // ----- Different
+        //Create run
+        var different = await _splitController.CreateSplit(0, 1, "Ogre");
+        TestsHelper.SafetyChecks(different);
 
         //Get Split from repo
-        var run = await _splitRepository.GetSplit((int)(result as OkObjectResult)!.Value!);
+        var run = await _splitRepository.GetSplit((int)(different as OkObjectResult)!.Value!);
         Assert.That(run, Is.Not.EqualTo(null));
+    }
+
+    //--------------- Rename Split  ---------------
+    /// <summary>
+    /// Renames the split "Genichiro" which has id 1, to "Start"
+    /// This should succeed
+    /// </summary>
+    [Test]
+    public async Task RenameSplit()
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        Console.WriteLine(JsonSerializer.Serialize(await _accountRepository.GetAccount(0), options));
     }
 }

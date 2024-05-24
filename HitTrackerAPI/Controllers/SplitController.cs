@@ -28,4 +28,9 @@ public class SplitController(IAccountRepository accountRepo, ISplitRepository sp
         var result = await splitRepo.CreateSplit(account, runId, name);
         return result != null ? Ok(result) : StatusCode(500, "Error creating run");
     }
+
+    public async Task<IActionResult> RenameSplit(int splitId, string name)
+    {
+        return null!;
+    }
 }

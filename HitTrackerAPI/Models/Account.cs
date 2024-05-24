@@ -23,4 +23,9 @@ public sealed class Account
     /// Runs on an account
     /// </summary>
     public ICollection<Run>? Runs { get; init; }
+
+    public override string ToString()
+    {
+        return $"AccountId: {AccountId}, Runs: [{string.Join(", ", Runs ?? [])}]";
+    }
 }
