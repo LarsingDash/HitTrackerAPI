@@ -15,13 +15,14 @@ public class SplitControllerTests
 
     private SplitController _splitController = null!;
 
+    private readonly DbContextOptions<HitTrackerContext> _options =
+        new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
     private HitTrackerContext _context = null!;
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
-        var options = new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
-        _context = new HitTrackerContext(options);
+        _context = new HitTrackerContext(_options);
 
         _accountRepository = new AccountRepository(_context);
         _splitRepository = new SplitRepository(_context);
@@ -31,7 +32,7 @@ public class SplitControllerTests
         SeedDb.SeedingRun(_context);
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public void TearDown()
     {
         _context.Database.EnsureDeleted();
@@ -60,7 +61,7 @@ public class SplitControllerTests
 
         //Check result of CreateSplit
         Assert.That((happy as OkObjectResult)!.Value, Is.EqualTo(4));
-        
+
         // ----- Duplicate
         //Create "Bull" split in Sekiro
         var duplicate = await _splitController.CreateSplit(0, 2, "Ogre");
@@ -68,7 +69,7 @@ public class SplitControllerTests
 
         //Ensure error
         Assert.That((duplicate as ObjectResult)!.StatusCode!, Is.EqualTo(500));
-        
+
         // ----- Different
         //Create run
         var different = await _splitController.CreateSplit(0, 1, "Ogre");

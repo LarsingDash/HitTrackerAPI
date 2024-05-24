@@ -12,13 +12,14 @@ public class AccountControllerTests
     private AccountRepository _repository = null!;
     private AccountController _controller = null!;
 
+    private readonly DbContextOptions<HitTrackerContext> _options =
+        new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
     private HitTrackerContext _context = null!;
     
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
-        var options = new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
-        _context = new HitTrackerContext(options);
+        _context = new HitTrackerContext(_options);
         
         _repository = new AccountRepository(_context);
         _controller = new AccountController(_repository);
@@ -26,7 +27,7 @@ public class AccountControllerTests
         SeedDb.SeedingRun(_context);
     }
     
-    [OneTimeTearDown]
+    [TearDown]
     public void Teardown()
     {
         _context.Database.EnsureDeleted();

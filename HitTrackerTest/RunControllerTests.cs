@@ -14,13 +14,14 @@ public class RunControllerTests
 
     private RunController _runController = null!;
 
+    private readonly DbContextOptions<HitTrackerContext> _options =
+        new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
     private HitTrackerContext _context = null!;
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
-        var options = new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
-        _context = new HitTrackerContext(options);
+        _context = new HitTrackerContext(_options);
 
         _accountRepository = new AccountRepository(_context);
         _runRepository = new RunRepository(_context);
@@ -30,7 +31,7 @@ public class RunControllerTests
         SeedDb.SeedingRun(_context);
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public void TearDown()
     {
         _context.Database.EnsureDeleted();
@@ -39,22 +40,27 @@ public class RunControllerTests
 
     //--------------- Create Run  ---------------
     /// <summary>
-    /// Tries to create the run "Elden Ring" on an account
-    /// The mock repository has the accounts 0 and 1, account 0 has the run "Dark Souls"
+    /// Happy
+    ///     Tries to create the run "Elden Ring" on an account
+    ///     The mock repository has the accounts 0 and 1, account 0 has the run "Dark Souls"
+    /// Duplicate
+    ///     Tries to create Dark Souls on an account that already has it
+    ///     Should return with an error message indicating such
+    /// Different
+    ///     Tries to create Dark Souls on an account, while another already has it 
+    ///     Should return still be allowed
     /// </summary>
     [Test]
-    public async Task CreateRun_Happy()
+    public async Task CreateRun()
     {
+        // ----- Happy
         //Attempt to add the "Elden Ring", this should create the run with ID 1
-        var result = await _runController.CreateRun(0, "Elden Ring");
-
-        //Assert success state
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        var happy = await _runController.CreateRun(0, "Elden Ring");
+        TestsHelper.SafetyChecks(happy);
 
         //Assert its presence on GetRun
-        var run = await _runRepository.GetRun((int)(result as OkObjectResult)!.Value!);
-        Assert.That(run, Is.Not.EqualTo(null));
+        var happyRun = await _runRepository.GetRun((int)(happy as OkObjectResult)!.Value!);
+        Assert.That(happyRun, Is.Not.EqualTo(null));
 
         //Assert its presence in the account
         Assert.That(
@@ -63,42 +69,22 @@ public class RunControllerTests
                 r => r.Name == "Elden Ring")
             , Is.Not.EqualTo(null)
         );
-    }
-
-    /// <summary>
-    /// Tries to create Dark Souls on an account that already has it
-    /// Should return with an error message indicating such
-    /// </summary>
-    [Test]
-    public async Task CreateRun_SameOnAccount()
-    {
+        
+        // ----- Duplicate
         //Create run
-        var result = await _runController.CreateRun(0, "Dark Souls");
-
-        //Safety Checks
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<ObjectResult>());
+        var duplicate = await _runController.CreateRun(0, "Dark Souls");
+        TestsHelper.SafetyChecks<ObjectResult>(duplicate);
 
         //Ensure error
-        Assert.That((result as ObjectResult)!.StatusCode!, Is.EqualTo(500));
-    }
-
-    /// <summary>
-    /// Tries to create Dark Souls on an account, while another already has it 
-    /// Should return still be allowed
-    /// </summary>
-    [Test]
-    public async Task CreateRun_SameDifferentAccount()
-    {
+        Assert.That((duplicate as ObjectResult)!.StatusCode!, Is.EqualTo(500));
+        
+        // ----- Different
         //Create run
-        var result = await _runController.CreateRun(1, "Dark Souls");
-
-        //Safety Checks
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        var different = await _runController.CreateRun(1, "Dark Souls");
+        TestsHelper.SafetyChecks(different);
 
         //Get run form repo
-        var run = await _runRepository.GetRun((int)(result as OkObjectResult)!.Value!);
-        Assert.That(run, Is.Not.EqualTo(null));
+        var differentRun = await _runRepository.GetRun((int)(different as OkObjectResult)!.Value!);
+        Assert.That(differentRun, Is.Not.EqualTo(null));
     }
 }
