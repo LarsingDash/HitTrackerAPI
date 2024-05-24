@@ -67,11 +67,11 @@ public class AccountControllerTests
     public async Task GetAccount()
     {
         //Correct
-        var correct = await _controller.GetAccount(0);
+        var correct = await _controller.GetFullAccount(0);
         Assert.That(correct, Is.InstanceOf<OkObjectResult>());
         
         //Bad
-        var bad = await _controller.GetAccount(10);
+        var bad = await _controller.GetFullAccount(10);
         Assert.That(bad, Is.InstanceOf<NotFoundObjectResult>());
     }
 }
