@@ -1,4 +1,5 @@
-﻿using HitTrackerAPI.Database;
+﻿using System.Text.Json;
+using HitTrackerAPI.Database;
 using HitTrackerAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,15 +25,26 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
             Console.WriteLine("Split on this run with name already existed");
             return null;
         }
-        
+
         //Create new split and add to db
-        var result = await context.Splits.AddAsync(new Split { Name = name }); //Add to Splits
+        var result = await context.Splits.AddAsync(new Split { ParentId = runId, Name = name }); //Add to Splits
         run.Splits?.Add(result.Entity); //Add split to run in Runs
         await context.SaveChangesAsync();
-        
+
         Console.WriteLine($"Created split: {result.Entity}");
-        
+
         //Return id of newly created run
         return result.Entity.SplitId;
+    }
+
+    public async Task<bool> RenameSplit(Split split, Run parent, string name)
+    {
+        //Check if name is already taken
+        if (parent.Splits != null && parent.Splits.Any(check => check.Name == name)) return false;
+
+        //Change and save
+        split.Name = name;
+        await context.SaveChangesAsync();
+        return true;
     }
 }

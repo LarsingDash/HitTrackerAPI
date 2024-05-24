@@ -16,14 +16,20 @@ public class MockDb
         [
             new Split
             {
+                SplitId = 1,
+                ParentId = 2,
                 Name = "Genichiro",
             },
             new Split
             {
+                SplitId = 2,
+                ParentId = 2,
                 Name = "Ogre",
             },
             new Split
             {
+                SplitId = 3,
+                ParentId = 2,
                 Name = "Gyoubu",
             },
         ]);
@@ -33,10 +39,12 @@ public class MockDb
         [
             new Run
             {
+                RunId = 1,
                 Name = "Dark Souls",
             },
             new Run
             {
+                RunId = 2,
                 Name = "Sekiro",
                 Splits =
                 [

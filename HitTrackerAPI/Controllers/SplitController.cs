@@ -1,4 +1,5 @@
 ﻿using HitTrackerAPI.Repositories.AccountRepositories;
+using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace HitTrackerAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SplitController(IAccountRepository accountRepo, ISplitRepository splitRepo) : ControllerBase
+public class SplitController(IAccountRepository accountRepo, IRunRepository runRepo, ISplitRepository splitRepo) : ControllerBase
 {
     /// <summary>
     /// Requests creation of a split
@@ -29,8 +30,16 @@ public class SplitController(IAccountRepository accountRepo, ISplitRepository sp
         return result != null ? Ok(result) : StatusCode(500, "Error creating run");
     }
 
+    [HttpPatch("RenameSplit")]
     public async Task<IActionResult> RenameSplit(int splitId, string name)
     {
-        return null!;
+        var split = await splitRepo.GetSplit(splitId);
+        if (split == null) return StatusCode(500, "Error while renaming, split not found");
+
+        var run = await runRepo.GetRun(split.ParentId);
+        if (run == null) return StatusCode(500, "Error while renaming, parenting run not found");
+        
+        var result = await splitRepo.RenameSplit(split, run, name);
+        return result ? Ok() : StatusCode(500, "Name was already taken");
     }
 }

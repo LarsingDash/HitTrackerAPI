@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace HitTrackerAPI.Models;
 
@@ -21,15 +22,12 @@ public sealed class Run
     /// Name for the run, also has to be unique
     /// </summary>
     [MaxLength(35)]
-    public string Name { get; init; } = null!;
+    public string Name { get; set; } = null!;
 
     /// <summary>
     /// Splits on a run
     /// </summary>
     public ICollection<Split>? Splits { get; init; }
 
-    public override string ToString()
-    {
-        return $"RunId: {RunId}, Name: {Name}, Splits: [{string.Join(", ", Splits ?? [])}]";
-    }
+    public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

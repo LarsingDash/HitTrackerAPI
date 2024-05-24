@@ -2,6 +2,7 @@
 using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
 using HitTrackerAPI.Repositories.AccountRepositories;
+using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,14 @@ namespace HitTrackerTest;
 public class SplitControllerTests
 {
     private AccountRepository _accountRepository = null!;
+    private RunRepository _runRepository = null!;
     private SplitRepository _splitRepository = null!;
 
     private SplitController _splitController = null!;
 
     private readonly DbContextOptions<HitTrackerContext> _options =
         new DbContextOptionsBuilder<HitTrackerContext>().UseInMemoryDatabase("HitTracker").Options;
+
     private HitTrackerContext _context = null!;
 
     [SetUp]
@@ -25,9 +28,10 @@ public class SplitControllerTests
         _context = new HitTrackerContext(_options);
 
         _accountRepository = new AccountRepository(_context);
+        _runRepository = new RunRepository(_context);
         _splitRepository = new SplitRepository(_context);
 
-        _splitController = new SplitController(_accountRepository, _splitRepository);
+        _splitController = new SplitController(_accountRepository, _runRepository, _splitRepository);
 
         SeedDb.SeedingRun(_context);
     }
@@ -61,6 +65,7 @@ public class SplitControllerTests
 
         //Check result of CreateSplit
         Assert.That((happy as OkObjectResult)!.Value, Is.EqualTo(4));
+        Assert.That((await _splitRepository.GetSplit(4))?.ParentId, Is.EqualTo(2));
 
         // ----- Duplicate
         //Create "Bull" split in Sekiro
@@ -82,13 +87,34 @@ public class SplitControllerTests
 
     //--------------- Rename Split  ---------------
     /// <summary>
-    /// Renames the split "Genichiro" which has id 1, to "Start"
-    /// This should succeed
+    /// Happy
+    ///     Renames the split "Genichiro" which has id 1, to "Start"
+    ///     This should succeed, since the name isn't taken
+    /// Taken
+    ///     Renames the split "Genichiro" which has id 1, to "Ogre"
+    ///     This should fail, since the name is taken
     /// </summary>
     [Test]
     public async Task RenameSplit()
     {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        Console.WriteLine(JsonSerializer.Serialize(await _accountRepository.GetAccount(0), options));
+        // ----- Happy
+        //Rename
+        var happy = await _splitController.RenameSplit(1, "Start");
+        TestsHelper.SafetyChecks<OkResult>(happy);
+
+        //Ensure
+        Assert.That(
+            (await _accountRepository.GetAccount(0))?.Runs?.Any(
+                run => run.Splits!.Any(
+                    split => split.Name == "Start")),
+            Is.True);
+
+        // ----- Taken
+        //Rename
+        var taken = await _splitController.RenameSplit(1, "Ogre");
+        TestsHelper.SafetyChecks<ObjectResult>(taken);
+
+        //Ensure
+        Assert.That((taken as ObjectResult)!.StatusCode!, Is.EqualTo(500));
     }
 }

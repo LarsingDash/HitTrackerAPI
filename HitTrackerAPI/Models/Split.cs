@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace HitTrackerAPI.Models;
 
@@ -16,15 +18,18 @@ public sealed class Split
     /// </summary>
     [Key]
     public int SplitId { get; init; }
+    
+    /// <summary>
+    /// Foreign key of the split's parent run
+    /// </summary>
+    [ForeignKey("Run")]
+    public int ParentId { get; init; }
 
     /// <summary>
     /// Name for the split, also has to be unique
     /// </summary>
     [MaxLength(35)]
-    public string Name { get; init; } = null!;
+    public string Name { get; set; } = null!;
     
-    public override string ToString()
-    {
-        return $"SplitId: {SplitId}, Name: {Name}";
-    }
+    public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

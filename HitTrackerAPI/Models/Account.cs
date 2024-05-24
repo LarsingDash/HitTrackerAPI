@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace HitTrackerAPI.Models;
 
@@ -24,8 +25,5 @@ public sealed class Account
     /// </summary>
     public ICollection<Run>? Runs { get; init; }
 
-    public override string ToString()
-    {
-        return $"AccountId: {AccountId}, Runs: [{string.Join(", ", Runs ?? [])}]";
-    }
+    public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

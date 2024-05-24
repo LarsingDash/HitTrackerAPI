@@ -17,7 +17,7 @@ namespace HitTrackerAPI.Repositories.AccountRepositories
         /// Creates the given account
         /// </summary>
         /// <param name="account">The account that will be entered into the database</param>
-        /// <returns>Success indicator</returns>
+        /// <returns>Success indication</returns>
         Task<bool> CreateAccount(Account account);
     }
 }
