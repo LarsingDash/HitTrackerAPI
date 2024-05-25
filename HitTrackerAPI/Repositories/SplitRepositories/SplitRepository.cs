@@ -9,16 +9,9 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
     public async Task<Split?> GetSplit(int id) =>
         await context.Splits.Include(split => split.Hits).FirstOrDefaultAsync(split => split.SplitId == id);
 
-    public async Task<int?> CreateSplit(Account account, int runId, string name)
+    public async Task<int?> CreateSplit(Run run, string name)
     {
         //Test if name already exists
-        var run = account.Runs?.FirstOrDefault(other => other.RunId == runId);
-        if (run == null)
-        {
-            Console.WriteLine("Run with given runId not found");
-            return null;
-        }
-
         if (run.Splits?.FirstOrDefault(other => other.Name == name) != null)
         {
             Console.WriteLine("Split on this run with name already existed");
@@ -29,7 +22,11 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
         if (run.Splits == null) return null;
 
         var result = await context.Splits.AddAsync(new Split
-            { ParentId = runId, Name = name, Order = run.Splits.Count }); //Add to Splits
+        {
+            ParentId = run.RunId,
+            Name = name,
+            Order = run.Splits.Count,
+        }); //Add to Splits
         run.Splits?.Add(result.Entity); //Add split to run in Runs
         await context.SaveChangesAsync();
 
