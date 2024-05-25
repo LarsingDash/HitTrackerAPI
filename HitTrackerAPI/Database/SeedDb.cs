@@ -1,6 +1,4 @@
-﻿using HitTrackerAPI.Models;
-
-namespace HitTrackerAPI.Database;
+﻿namespace HitTrackerAPI.Database;
 
 public static class SeedDb
 {
@@ -9,16 +7,16 @@ public static class SeedDb
         using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetService<HitTrackerContext>();
 
-        if (context is null)
-            return;
+        if (context != null && !context.Accounts.Any()) SeedingRun(context);
+    }
 
-        if (context.Accounts.Any())
-            return;
+    public static void SeedingRun(HitTrackerContext context)
+    {
+        var mock = new MockDb();
 
-        var account0 = new Account { AccountId = 0};
-        var account1 = new Account { AccountId = 1 };
-
-        context.Accounts.AddRange(new List<Account> { account0, account1 });
+        context.Accounts.AddRange(mock.Accounts);
+        context.Runs.AddRange(mock.Runs);
+        context.Splits.AddRange(mock.Splits);
         context.SaveChanges();
     }
 }
