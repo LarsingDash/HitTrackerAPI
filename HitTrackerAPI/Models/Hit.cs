@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 namespace HitTrackerAPI.Models;
@@ -29,4 +30,6 @@ public class Hit
     /// Optional message for the hit
     /// </summary>
     [MaxLength(150)] public string Message { get; init; } = null!;
+
+    public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

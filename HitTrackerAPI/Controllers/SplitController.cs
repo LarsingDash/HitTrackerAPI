@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HitTrackerAPI.Controllers;
 
 [ApiController]
+[Tags("3 - Splits")]
 [Route("api/[controller]")]
 public class SplitController(IAccountRepository accountRepo, IRunRepository runRepo, ISplitRepository splitRepo) : ControllerBase
 {

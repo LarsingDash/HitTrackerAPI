@@ -2,14 +2,16 @@
 using HitTrackerAPI.Database;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.HitRepositories;
+using HitTrackerAPI.Repositories.SplitRepositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HitTrackerTest;
 
 public class HitControllerTests
 {
-    private AccountRepository _accountRepository = null!;
     private HitRepository _hitRepository = null!;
+    private SplitRepository _splitRepository = null!;
 
     private HitController _hitController = null!;
 
@@ -22,10 +24,10 @@ public class HitControllerTests
     {
         _context = new HitTrackerContext(_options);
 
-        _accountRepository = new AccountRepository(_context);
-        _hitRepository = new HitRepository();
+        _splitRepository = new SplitRepository(_context);
+        _hitRepository = new HitRepository(_context);
 
-        _hitController = new HitController(_accountRepository, _hitRepository);
+        _hitController = new HitController(_hitRepository, _splitRepository);
 
         SeedDb.SeedingRun(_context);
     }
@@ -35,5 +37,21 @@ public class HitControllerTests
     {
         _context.Database.EnsureDeleted();
         _context.Dispose();
+    }
+    
+    //--------------- Create Hit ---------------
+    /// <summary>
+    /// Tries to create a hit on splitId 3 "Gyoubu"
+    /// Should work and return a new hit amount of 2
+    /// </summary>
+    [Test]
+    public async Task CreateHit()
+    {
+        //Create hit
+        var result = await _hitController.CreateHit(3, "Test hit");
+        TestsHelper.SafetyChecks(result);
+        
+        //Check new hit amount
+        Assert.That((result as OkObjectResult)!.Value, Is.EqualTo(2));
     }
 }

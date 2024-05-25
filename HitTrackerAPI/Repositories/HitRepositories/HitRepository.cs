@@ -1,11 +1,23 @@
-﻿using HitTrackerAPI.Models;
+﻿using HitTrackerAPI.Database;
+using HitTrackerAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HitTrackerAPI.Repositories.HitRepositories;
 
-public class HitRepository : IHitRepository
+public class HitRepository(HitTrackerContext context) : IHitRepository
 {
-    public Task<int?> CreateHit(Split split, string message)
+    public async Task<int?> CreateHit(Split split, string message)
     {
-        throw new NotImplementedException();
+        if (split.Hits == null) return null;
+
+        await context.Hits.AddAsync(new Hit
+        {
+            SplitId = split.SplitId,
+            Timestamp = DateTime.Now,
+            Message = message,
+        });
+
+        await context.SaveChangesAsync();
+        return split.Hits!.Count;
     }
 }

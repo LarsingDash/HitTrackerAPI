@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HitTrackerAPI.Controllers;
 
 [ApiController]
+[Tags("2 - Runs")]
 [Route("api/[controller]")]
 public class RunController(IAccountRepository accountRepo, IRunRepository runRepo) : ControllerBase
 {
