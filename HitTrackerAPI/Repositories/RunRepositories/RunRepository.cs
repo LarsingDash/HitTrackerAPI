@@ -7,7 +7,7 @@ namespace HitTrackerAPI.Repositories.RunRepositories;
 public class RunRepository(HitTrackerContext context) : IRunRepository
 {
     public async Task<Run?> GetRun(int id) =>
-        await context.Runs.FirstOrDefaultAsync(run => run.RunId == id);
+        await context.Runs.Include(run => run.Splits).FirstOrDefaultAsync(run => run.RunId == id);
 
     public async Task<int?> CreateRun(Account account, string name)
     {
@@ -24,9 +24,7 @@ public class RunRepository(HitTrackerContext context) : IRunRepository
         await context.SaveChangesAsync();
 
         Console.WriteLine($"Created run: {result.Entity}");
-
-        // await context.Runs.ForEachAsync(Console.WriteLine); //Debug print
-
+        
         //Return id of newly created run
         return result.Entity.RunId;
     }

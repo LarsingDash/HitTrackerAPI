@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace HitTrackerAPI.Models;
 
@@ -10,21 +10,24 @@ namespace HitTrackerAPI.Models;
 ///     <item><see cref="Name"/></item>
 /// </list>
 /// </summary>
-public class Run
+public sealed class Run
 {
     /// <summary>
     /// Unique identifier for each run
     /// </summary>
     [Key]
     public int RunId { get; init; }
-    
+
     /// <summary>
     /// Name for the run, also has to be unique
     /// </summary>
-    public string Name { get; init; }
+    [MaxLength(35)]
+    public string Name { get; set; } = null!;
 
-    public override string ToString()
-    {
-        return $"Run {RunId}: {Name}";
-    }
+    /// <summary>
+    /// Splits on a run
+    /// </summary>
+    public ICollection<Split>? Splits { get; init; }
+
+    public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

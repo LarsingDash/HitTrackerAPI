@@ -1,5 +1,4 @@
-﻿using HitTrackerAPI.Models;
-using HitTrackerAPI.Repositories.AccountRepositories;
+﻿using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +14,8 @@ public class RunController(IAccountRepository accountRepo, IRunRepository runRep
     /// <param name="accountId">Id of the calling account</param>
     /// <param name="name">Name of the run that will be created</param>
     /// <response code="200">A run with <i><b>id</b></i> was successfully created</response>
-    /// <response code="400">There was an error while creating the run</response>
-    /// <response code="401">Could not find an account with the given <i><b>id</b></i></response>
+    /// <response code="500">There was an error while creating the run</response>
+    /// <response code="404">Could not find an account with the given <i><b>id</b></i></response>
     [HttpPost("CreateRun")]
     public async Task<IActionResult> CreateRun(int accountId, string name)
     {

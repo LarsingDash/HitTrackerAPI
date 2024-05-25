@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HitTrackerAPI.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,8 @@ namespace HitTrackerAPI;
 
 public static class Program
 {
+    public static JsonSerializerOptions Options { get; } = new JsonSerializerOptions { WriteIndented = true };
+
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
