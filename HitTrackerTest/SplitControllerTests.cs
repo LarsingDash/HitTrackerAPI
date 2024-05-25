@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
+using HitTrackerAPI.Models;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
@@ -116,5 +117,28 @@ public class SplitControllerTests
 
         //Ensure
         Assert.That((taken as ObjectResult)!.StatusCode!, Is.EqualTo(500));
+    }
+
+    /// <summary>
+    /// Moves Sekiro's "Genichiro" split to throughout the run a couple of times 
+    /// Should clamp requested index within bounds of list, and move the surrounding splits
+    /// </summary>
+    [Test]
+    public async Task MoveSplit()
+    {
+        //Move splitId 1 to the middle of the run
+        var middle = await _splitController.MoveSplit(1, 1);
+        TestsHelper.SafetyChecks<OkResult>(middle);
+        TestsHelper.CheckSplitOrder((await _runRepository.GetRun(2))!, [2, 1, 3]);
+
+        //Move splitId 1 to infinity
+        var inf = await _splitController.MoveSplit(1, int.MaxValue);
+        TestsHelper.SafetyChecks<OkResult>(inf);
+        TestsHelper.CheckSplitOrder((await _runRepository.GetRun(2))!, [2, 3, 1]);
+
+        //Move splitId 1 to negative infinity
+        var negInf = await _splitController.MoveSplit(1, int.MinValue);
+        TestsHelper.SafetyChecks<OkResult>(negInf);
+        TestsHelper.CheckSplitOrder((await _runRepository.GetRun(2))!, [1, 2, 3]);
     }
 }

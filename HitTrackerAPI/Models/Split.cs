@@ -30,6 +30,11 @@ public sealed class Split
     /// </summary>
     [MaxLength(35)]
     public string Name { get; set; } = null!;
+
+    /// <summary>
+    /// Order of the split in the run
+    /// </summary>
+    public int Order { get; set; }
     
     public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }

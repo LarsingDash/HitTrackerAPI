@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using HitTrackerAPI.Database;
+﻿using HitTrackerAPI.Database;
 using HitTrackerAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,6 +43,27 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
 
         //Change and save
         split.Name = name;
+        await context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> MoveSplit(Split split, Run parent, int runPosition)
+    {
+        if (parent.Splits == null) return false;
+
+        //Clamp within list bounds
+        runPosition = int.Clamp(runPosition, 0, parent.Splits.Count - 1);
+
+        //Convert Splits to a list, remove the item and place it at the correct index
+        var splitsList = parent.Splits.ToList();
+        if (!splitsList.Remove(split)) return false;
+        splitsList.Insert(runPosition, split);
+
+        //Replace indices the original collection
+        for (var i = 0; i < splitsList.Count; i++)
+            parent.Splits.Single(single => splitsList[i].SplitId == single.SplitId).Order = i;
+
+        //Save changes
         await context.SaveChangesAsync();
         return true;
     }

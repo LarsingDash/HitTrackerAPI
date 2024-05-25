@@ -19,18 +19,21 @@ public class MockDb
                 SplitId = 1,
                 ParentId = 2,
                 Name = "Genichiro",
+                Order = 0,
             },
             new Split
             {
                 SplitId = 2,
                 ParentId = 2,
                 Name = "Ogre",
+                Order = 1,
             },
             new Split
             {
                 SplitId = 3,
                 ParentId = 2,
                 Name = "Gyoubu",
+                Order = 2,
             },
         ]);
 
