@@ -26,7 +26,10 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
         }
 
         //Create new split and add to db
-        var result = await context.Splits.AddAsync(new Split { ParentId = runId, Name = name }); //Add to Splits
+        if (run.Splits == null) return null;
+
+        var result = await context.Splits.AddAsync(new Split
+            { ParentId = runId, Name = name, Order = run.Splits.Count }); //Add to Splits
         run.Splits?.Add(result.Entity); //Add split to run in Runs
         await context.SaveChangesAsync();
 
