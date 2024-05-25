@@ -17,6 +17,7 @@ public static class SeedDb
         context.Accounts.AddRange(mock.Accounts);
         context.Runs.AddRange(mock.Runs);
         context.Splits.AddRange(mock.Splits);
+        context.Splits.AddRange(mock.Splits);
         context.SaveChanges();
     }
 }

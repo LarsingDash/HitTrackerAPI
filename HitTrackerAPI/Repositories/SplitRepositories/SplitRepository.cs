@@ -7,7 +7,7 @@ namespace HitTrackerAPI.Repositories.SplitRepositories;
 public class SplitRepository(HitTrackerContext context) : ISplitRepository
 {
     public async Task<Split?> GetSplit(int id) =>
-        await context.Splits.FirstOrDefaultAsync(split => split.SplitId == id);
+        await context.Splits.Include(split => split.Hits).FirstOrDefaultAsync(split => split.SplitId == id);
 
     public async Task<int?> CreateSplit(Account account, int runId, string name)
     {

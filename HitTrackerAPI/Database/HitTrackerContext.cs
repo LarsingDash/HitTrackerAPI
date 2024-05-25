@@ -9,6 +9,7 @@ public class HitTrackerContext(DbContextOptions<HitTrackerContext> option) : DbC
     public DbSet<Account> Accounts { get; init; } = null!;
     public DbSet<Run> Runs { get; init; } = null!;
     public DbSet<Split> Splits { get; init; } = null!;
+    public DbSet<Hit> Hits { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -17,5 +18,6 @@ public class HitTrackerContext(DbContextOptions<HitTrackerContext> option) : DbC
         modelBuilder.Entity<Account>();
         modelBuilder.Entity<Run>();
         modelBuilder.Entity<Split>();
+        modelBuilder.Entity<Hit>();
     }
 }
