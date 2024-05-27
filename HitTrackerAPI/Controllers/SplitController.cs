@@ -1,5 +1,4 @@
-﻿using HitTrackerAPI.Repositories.AccountRepositories;
-using HitTrackerAPI.Repositories.RunRepositories;
+﻿using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,12 +40,15 @@ public class SplitController(IRunRepository runRepo, ISplitRepository splitRepo)
     [HttpPatch("RenameSplit")]
     public async Task<IActionResult> RenameSplit(int splitId, string name)
     {
+        //GetSplit
         var split = await splitRepo.GetSplit(splitId);
         if (split == null) return NotFound("Could not find a split with the given id");
 
+        //GetRun
         var run = await runRepo.GetRun(split.ParentId);
         if (run == null) return NotFound("Could not find parenting run with the given id");
         
+        //RenameSplit
         var result = await splitRepo.RenameSplit(split, run, name);
         return result ? Ok() : StatusCode(500, "Name was already taken");
     }
@@ -61,12 +63,15 @@ public class SplitController(IRunRepository runRepo, ISplitRepository splitRepo)
     [HttpPatch("MoveSplit")]
     public async Task<IActionResult> MoveSplit(int splitId, int runPosition)
     {
+        //GetSplit
         var split = await splitRepo.GetSplit(splitId);
         if (split == null) return NotFound("Could not find a split with the given id");
         
+        //GetRun
         var run = await runRepo.GetRun(split.ParentId);
         if (run == null) return NotFound("Could not find parenting run with the given id");
         
+        //MoveSplit
         var result = await splitRepo.MoveSplit(split, run, runPosition);
         return result ? Ok() : StatusCode(500, "An error occurred while moving the split");
     }

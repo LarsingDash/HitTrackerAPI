@@ -20,9 +20,11 @@ public class HitController(IHitRepository hitRepo, ISplitRepository splitRepo) :
     [HttpPost("CreateHit")]
     public async Task<IActionResult> CreateHit(int splitId, string message)
     {
+        //GetSplit
         var split = await splitRepo.GetSplit(splitId);
         if (split == null) return NotFound("Could not find a split with the given id");
 
+        //CreateHit
         var result = await hitRepo.CreateHit(split, message);
         return result != null ? Ok(result) : StatusCode(500, "There was an error while creating the hit");
     }
@@ -36,9 +38,11 @@ public class HitController(IHitRepository hitRepo, ISplitRepository splitRepo) :
     [HttpDelete("UndoHit")]
     public async Task<IActionResult> UndoHit(int splitId)
     {
+        //GetSplit
         var split = await splitRepo.GetSplit(splitId);
         if (split == null) return NotFound("Could not find a split with the given id");
 
+        //UndoHit
         return await hitRepo.UndoHit(split) ? Ok() : NotFound();
     }
 }
