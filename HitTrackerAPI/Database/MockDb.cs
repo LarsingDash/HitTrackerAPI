@@ -17,7 +17,7 @@ public class MockDb
             new Hit
             {
                 SplitId = 1,
-                Timestamp = DateTime.Now.AddHours(-1),
+                Timestamp = DateTime.Now.AddHours(-3),
                 Message = "Test hit 1: Genichiro"
             },
             new Hit
@@ -29,7 +29,7 @@ public class MockDb
             new Hit
             {
                 SplitId = 1,
-                Timestamp = DateTime.Now.AddHours(-3),
+                Timestamp = DateTime.Now.AddHours(-1),
                 Message = "Test hit 3: Genichiro again"
             },
         ]);

@@ -20,4 +20,17 @@ public class HitRepository(HitTrackerContext context) : IHitRepository
         await context.SaveChangesAsync();
         return split.Hits!.Count;
     }
+
+    public async Task<bool> UndoHit(Split split)
+    {
+        if (split.Hits?.Count == 0) return false;
+
+        var last = split.Hits?.MaxBy(hit => hit.Timestamp);
+        if (last == null) return false;
+
+        split.Hits?.Remove(last);
+        await context.SaveChangesAsync();
+
+        return true;
+    }
 }
