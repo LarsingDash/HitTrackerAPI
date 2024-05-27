@@ -8,6 +8,7 @@ namespace HitTrackerAPI.Models;
 /// <list type="bullet">
 ///     <item><see cref="RunId"/></item>
 ///     <item><see cref="Name"/></item>
+///     <item><see cref="Splits"/></item>
 /// </list>
 /// </summary>
 public sealed class Run
