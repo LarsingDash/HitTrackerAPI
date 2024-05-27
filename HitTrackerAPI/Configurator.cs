@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HitTrackerAPI.Repositories.AccountRepositories;
+using HitTrackerAPI.Repositories.HitRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
 using Microsoft.OpenApi.Models;
@@ -40,6 +41,7 @@ namespace HitTrackerAPI
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRunRepository, RunRepository>();
             services.AddScoped<ISplitRepository, SplitRepository>();
+            services.AddScoped<IHitRepository, HitRepository>();
 
             //Setting logging level
             services.AddLogging(builder =>

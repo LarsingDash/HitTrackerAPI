@@ -16,11 +16,10 @@ public interface ISplitRepository
     /// <summary>
     /// Creates a split with the given name on the given account
     /// </summary>
-    /// <param name="account">The account which will receive the new split</param>
-    /// <param name="runId">Id of the run which the split will belong to</param>
+    /// <param name="run">Id of the run which the split will belong to</param>
     /// <param name="name">Name of the split that will be created</param>
     /// <returns>Id of the newly created split, null if no run could be created</returns>
-    Task<int?> CreateSplit(Account account, int runId, string name);
+    Task<int?> CreateSplit(Run run, string name);
 
     /// <summary>
     /// Renames the split with the given id to the given name

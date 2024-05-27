@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HitTrackerAPI.Controllers;
 
 [ApiController]
+[Tags("1 - Accounts")]
 [Route("api/[controller]")]
 public class AccountController(IAccountRepository accountRepo) : ControllerBase
 {

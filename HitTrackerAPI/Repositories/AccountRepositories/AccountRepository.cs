@@ -7,7 +7,9 @@ namespace HitTrackerAPI.Repositories.AccountRepositories
     public class AccountRepository(HitTrackerContext context) : IAccountRepository
     {
         public async Task<Account?> GetAccount(int id) =>
-            await context.Accounts.Include(account => account.Runs)!.ThenInclude(run => run.Splits)
+            await context.Accounts.Include(account => account.Runs)!
+                .ThenInclude(run => run.Splits)!
+                .ThenInclude(split => split.Hits)
                 .FirstOrDefaultAsync(account => account.AccountId == id);
 
         public async Task<bool> CreateAccount(Account account)

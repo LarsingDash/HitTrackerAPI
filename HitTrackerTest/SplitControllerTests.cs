@@ -1,7 +1,5 @@
-﻿using System.Text.Json;
-using HitTrackerAPI.Controllers;
+﻿using HitTrackerAPI.Controllers;
 using HitTrackerAPI.Database;
-using HitTrackerAPI.Models;
 using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
@@ -32,7 +30,7 @@ public class SplitControllerTests
         _runRepository = new RunRepository(_context);
         _splitRepository = new SplitRepository(_context);
 
-        _splitController = new SplitController(_accountRepository, _runRepository, _splitRepository);
+        _splitController = new SplitController(_runRepository, _splitRepository);
 
         SeedDb.SeedingRun(_context);
     }
@@ -61,7 +59,7 @@ public class SplitControllerTests
     {
         // ----- HAPPY
         //Create "Bull" split in Sekiro
-        var happy = await _splitController.CreateSplit(0, 2, "Bull");
+        var happy = await _splitController.CreateSplit(2, "Bull");
         TestsHelper.SafetyChecks(happy);
 
         //Check result of CreateSplit
@@ -70,7 +68,7 @@ public class SplitControllerTests
 
         // ----- Duplicate
         //Create "Bull" split in Sekiro
-        var duplicate = await _splitController.CreateSplit(0, 2, "Ogre");
+        var duplicate = await _splitController.CreateSplit(2, "Ogre");
         TestsHelper.SafetyChecks<ObjectResult>(duplicate);
 
         //Ensure error
@@ -78,7 +76,7 @@ public class SplitControllerTests
 
         // ----- Different
         //Create run
-        var different = await _splitController.CreateSplit(0, 1, "Ogre");
+        var different = await _splitController.CreateSplit(1, "Ogre");
         TestsHelper.SafetyChecks(different);
 
         //Get Split from repo
@@ -119,6 +117,7 @@ public class SplitControllerTests
         Assert.That((taken as ObjectResult)!.StatusCode!, Is.EqualTo(500));
     }
 
+    //--------------- Move Split  ---------------
     /// <summary>
     /// Moves Sekiro's "Genichiro" split to throughout the run a couple of times 
     /// Should clamp requested index within bounds of list, and move the surrounding splits

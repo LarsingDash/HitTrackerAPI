@@ -8,7 +8,10 @@ namespace HitTrackerAPI.Models;
 /// Model class for database table "Split"
 /// <list type="bullet">
 ///     <item><see cref="SplitId"/></item>
+///     <item><see cref="ParentId"/></item>
 ///     <item><see cref="Name"/></item>
+///     <item><see cref="Order"/></item>
+///     <item><see cref="Hits"/></item>
 /// </list>
 /// </summary>
 public sealed class Split
@@ -18,7 +21,7 @@ public sealed class Split
     /// </summary>
     [Key]
     public int SplitId { get; init; }
-    
+
     /// <summary>
     /// Foreign key of the split's parent run
     /// </summary>
@@ -35,6 +38,11 @@ public sealed class Split
     /// Order of the split in the run
     /// </summary>
     public int Order { get; set; }
-    
+
+    /// <summary>
+    /// Hits on a split
+    /// </summary>
+    public ICollection<Hit>? Hits { get; init; }
+
     public override string ToString() => JsonSerializer.Serialize(this, Program.Options);
 }
