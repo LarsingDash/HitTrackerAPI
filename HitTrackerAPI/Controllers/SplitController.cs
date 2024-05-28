@@ -1,5 +1,6 @@
 ﻿using HitTrackerAPI.Repositories.RunRepositories;
 using HitTrackerAPI.Repositories.SplitRepositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HitTrackerAPI.Controllers;
@@ -74,5 +75,27 @@ public class SplitController(IRunRepository runRepo, ISplitRepository splitRepo)
         //MoveSplit
         var result = await splitRepo.MoveSplit(split, run, runPosition);
         return result ? Ok() : StatusCode(500, "An error occurred while moving the split");
+    }
+
+    /// <summary>
+    /// Deletes the split with the given id
+    /// </summary>
+    /// <param name="splitId">Id of the split to delete</param>
+    /// <response code="200">The split was successfully deleted</response>
+    /// <response code="404">Could not find a split or parenting run with the given <i><b>id</b></i></response>
+    /// <response code="500">An error occured while deleting the split</response>
+    [HttpDelete("DeleteSplit")]
+    public async Task<IActionResult> DeleteSplit(int splitId)
+    {
+        //GetSplit
+        var split = await splitRepo.GetSplit(splitId);
+        if (split == null) return NotFound("Could not find a split with the given id");
+        
+        //GetRun
+        var run = await runRepo.GetRun(split.ParentId);
+        if (run == null) return NotFound("Could not find parenting run with the given id");
+        
+        var result = await splitRepo.DeleteSplit(split, run);
+        return result ? Ok() : StatusCode(500, "An error occured while deleting the split");
     }
 }

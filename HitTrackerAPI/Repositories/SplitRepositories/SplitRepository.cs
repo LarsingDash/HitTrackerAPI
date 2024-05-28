@@ -67,4 +67,22 @@ public class SplitRepository(HitTrackerContext context) : ISplitRepository
         await context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<bool> DeleteSplit(Split split, Run parent)
+    {
+        if (parent.Splits == null) return false;
+
+        //Convert Splits to a list, remove the item
+        var splitsList = parent.Splits.ToList();
+        if (!splitsList.Remove(split)) return false;
+
+        //Replace indices the original collection
+        for (var i = 0; i < splitsList.Count; i++)
+            parent.Splits.Single(single => splitsList[i].SplitId == single.SplitId).Order = i;
+        
+        //Save
+        context.Splits.Remove(split);
+        await context.SaveChangesAsync();
+        return true;
+    }
 }
