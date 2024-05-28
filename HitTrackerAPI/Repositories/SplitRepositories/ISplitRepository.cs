@@ -12,7 +12,7 @@ public interface ISplitRepository
     /// The <see cref="Split"/> that was found with the given ID. If no split was found with the given ID, returns null
     /// </returns>
     Task<Split?> GetSplit(int id);
-    
+
     /// <summary>
     /// Creates a split with the given name on the given account
     /// </summary>
@@ -36,6 +36,14 @@ public interface ISplitRepository
     /// <param name="split">The split to move</param>
     /// <param name="parent">Parent run to the split, necessary for moving other splits</param>
     /// <param name="runPosition">The new position in the run for the split</param>
-    /// <returns></returns>
+    /// <returns>Success Indication</returns>
     Task<bool> MoveSplit(Split split, Run parent, int runPosition);
+
+    /// <summary>
+    /// Tries to delete the split with the given ID
+    /// </summary>
+    /// <param name="split">The split to delete</param>
+    /// <param name="parent">Parent run to the split, necessary for moving other splits</param>
+    /// <returns>Success Indication</returns>
+    Task<bool> DeleteSplit(Split split, Run parent);
 }

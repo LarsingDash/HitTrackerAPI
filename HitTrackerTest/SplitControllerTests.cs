@@ -140,4 +140,23 @@ public class SplitControllerTests
         TestsHelper.SafetyChecks<OkResult>(negInf);
         TestsHelper.CheckSplitOrder((await _runRepository.GetRun(2))!, [1, 2, 3]);
     }
+    
+    //--------------- Delete Split  ---------------
+    /// <summary>
+    /// Happy
+    ///     Deletes the "Genichiro" split
+    ///     This should succeed, since it still exists
+    /// Gone
+    ///     Tries to delete the "Genichiro" split again
+    ///     This should fail, since it no longer exists
+    /// </summary>
+    [Test]
+    public async Task DeleteSplit()
+    {
+        var delete = await _splitController.DeleteSplit(1);
+        TestsHelper.SafetyChecks<OkResult>(delete);
+        
+        var gone = await _splitController.DeleteSplit(1);
+        TestsHelper.SafetyChecks<NotFoundObjectResult>(gone);
+    }
 }
