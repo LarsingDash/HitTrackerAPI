@@ -1,4 +1,5 @@
-﻿using HitTrackerAPI.Repositories.AccountRepositories;
+﻿using HitTrackerAPI.Models;
+using HitTrackerAPI.Repositories.AccountRepositories;
 using HitTrackerAPI.Repositories.RunRepositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,24 @@ namespace HitTrackerAPI.Controllers;
 [Route("api/[controller]")]
 public class RunController(IAccountRepository accountRepo, IRunRepository runRepo) : ControllerBase
 {
+    /// <summary>
+    /// Gets a run
+    /// </summary>
+    /// <param name="runId">Id of the wanted account</param>
+    /// <response code="200">The run that was fetched</response>
+    /// <response code="404">No run was found with the given id</response>
+    [HttpGet("GetRun")]
+    [ProducesResponseType(typeof(List<SplitDto>), 200)]
+    public async Task<IActionResult> GetRun(int runId)
+    {
+        var run = await runRepo.GetRun(runId);
+        if (run == null) return NotFound($"No run with {runId} found");
+        
+        List<SplitDto> list = [];
+        list.AddRange(run.Splits?.Select(SplitDto.FromSplit) ?? []);
+        return Ok(list);
+    }
+    
     /// <summary>
     /// Requests creation of a run
     /// </summary>
