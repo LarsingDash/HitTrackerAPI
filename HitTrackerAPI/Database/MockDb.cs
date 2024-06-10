@@ -18,19 +18,19 @@ public class MockDb
             {
                 SplitId = 1,
                 Timestamp = DateTime.Now.AddHours(-3),
-                Message = "Test hit 1: Genichiro"
+                Message = "Test hit 1: Split 1"
             },
             new Hit
             {
                 SplitId = 3,
                 Timestamp = DateTime.Now.AddHours(-2),
-                Message = "Test hit 2: Gyoubu"
+                Message = "Test hit 2: Split 3"
             },
             new Hit
             {
                 SplitId = 1,
                 Timestamp = DateTime.Now.AddHours(-1),
-                Message = "Test hit 3: Genichiro again"
+                Message = "Test hit 3: Split 1 again"
             },
         ]);
 
@@ -41,7 +41,7 @@ public class MockDb
             {
                 SplitId = 1,
                 ParentId = 2,
-                Name = "Genichiro",
+                Name = "Split 1",
                 Order = 0,
                 Hits =
                 [
@@ -53,14 +53,14 @@ public class MockDb
             {
                 SplitId = 2,
                 ParentId = 2,
-                Name = "Ogre",
+                Name = "Split 2",
                 Order = 1,
             },
             new Split
             {
                 SplitId = 3,
                 ParentId = 2,
-                Name = "Gyoubu",
+                Name = "Split 3",
                 Order = 2,
                 Hits =
                 [
@@ -75,12 +75,12 @@ public class MockDb
             new Run
             {
                 RunId = 1,
-                Name = "Dark Souls",
+                Name = "Game 1",
             },
             new Run
             {
                 RunId = 2,
-                Name = "Sekiro",
+                Name = "Game 2",
                 Splits =
                 [
                     Splits[0],
