@@ -28,11 +28,13 @@ public class RunDto
 
 public class SplitDto
 {
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
     public List<HitDto>? Hits { get; set; }
 
     public static SplitDto FromSplit(Split split) => new SplitDto
     {
+        Id = split.SplitId,
         Name = split.Name,
         Hits = split.Hits?.Select(HitDto.FromHit).ToList()
     };

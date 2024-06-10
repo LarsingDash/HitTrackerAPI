@@ -24,7 +24,7 @@ public class RunController(IAccountRepository accountRepo, IRunRepository runRep
         if (run == null) return NotFound($"No run with {runId} found");
         
         List<SplitDto> list = [];
-        list.AddRange(run.Splits?.Select(SplitDto.FromSplit) ?? []);
+        list.AddRange(run.Splits?.OrderBy(split => split.Order).Select(SplitDto.FromSplit) ?? []);
         return Ok(list);
     }
     
