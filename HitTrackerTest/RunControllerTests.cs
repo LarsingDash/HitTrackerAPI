@@ -41,21 +41,21 @@ public class RunControllerTests
     //--------------- Create Run  ---------------
     /// <summary>
     /// Happy
-    ///     Tries to create the run "Elden Ring" on an account
-    ///     The mock repository has the accounts 0 and 1, account 0 has the run "Dark Souls"
+    ///     Tries to create the run "Game 3" on an account
+    ///     The mock repository has the accounts 0 and 1, account 0 has the run "Game 1"
     /// Duplicate
-    ///     Tries to create Dark Souls on an account that already has it
+    ///     Tries to create "Game 1" on an account that already has it
     ///     Should return with an error message indicating such
     /// Different
-    ///     Tries to create Dark Souls on an account, while another already has it 
+    ///     Tries to create "Game 1" on an account, while another already has it 
     ///     Should return still be allowed
     /// </summary>
     [Test]
     public async Task CreateRun()
     {
         // ----- Happy
-        //Attempt to add the "Elden Ring", this should create the run with ID 1
-        var happy = await _runController.CreateRun(0, "Elden Ring");
+        //Attempt to add the "Game 3", this should create the run with ID 1
+        var happy = await _runController.CreateRun(0, "Game 3");
         TestsHelper.SafetyChecks(happy);
 
         //Assert its presence on GetRun
@@ -66,13 +66,13 @@ public class RunControllerTests
         Assert.That(
             (await _accountRepository.GetAccount(0))?
             .Runs?.FirstOrDefault(
-                r => r.Name == "Elden Ring")
+                r => r.Name == "Game 3")
             , Is.Not.EqualTo(null)
         );
         
         // ----- Duplicate
         //Create run
-        var duplicate = await _runController.CreateRun(0, "Dark Souls");
+        var duplicate = await _runController.CreateRun(0, "Game 1");
         TestsHelper.SafetyChecks<ObjectResult>(duplicate);
 
         //Ensure error
@@ -80,7 +80,7 @@ public class RunControllerTests
         
         // ----- Different
         //Create run
-        var different = await _runController.CreateRun(1, "Dark Souls");
+        var different = await _runController.CreateRun(1, "Game 1");
         TestsHelper.SafetyChecks(different);
 
         //Get run form repo

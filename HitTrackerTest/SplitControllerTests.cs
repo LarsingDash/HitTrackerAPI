@@ -45,13 +45,13 @@ public class SplitControllerTests
     //--------------- Create Split  ---------------
     /// <summary>
     /// Happy
-    ///     Tries to create the split "Bull" on Sekiro on account 0
+    ///     Tries to create the split "Split 4" on Game 2 on account 0
     ///     This should create a split with id 4
     /// Duplicate
-    ///     Tries to create Ogre split on an account that already has it
+    ///     Tries to create "Split 2" split on an account that already has it
     ///     This should return with an error message indicating such
     /// Different
-    ///     Tries to create an "Ogre" a run, while another run already has it
+    ///     Tries to create an "Split 2" a run, while another run already has it
     ///     This should still be allowed
     /// </summary>
     [Test]
@@ -59,7 +59,7 @@ public class SplitControllerTests
     {
         // ----- HAPPY
         //Create "Bull" split in Sekiro
-        var happy = await _splitController.CreateSplit(2, "Bull");
+        var happy = await _splitController.CreateSplit(2, "Split 4");
         TestsHelper.SafetyChecks(happy);
 
         //Check result of CreateSplit
@@ -68,7 +68,7 @@ public class SplitControllerTests
 
         // ----- Duplicate
         //Create "Bull" split in Sekiro
-        var duplicate = await _splitController.CreateSplit(2, "Ogre");
+        var duplicate = await _splitController.CreateSplit(2, "Split 2");
         TestsHelper.SafetyChecks<ObjectResult>(duplicate);
 
         //Ensure error
@@ -76,7 +76,7 @@ public class SplitControllerTests
 
         // ----- Different
         //Create run
-        var different = await _splitController.CreateSplit(1, "Ogre");
+        var different = await _splitController.CreateSplit(1, "Split 2");
         TestsHelper.SafetyChecks(different);
 
         //Get Split from repo
@@ -87,10 +87,10 @@ public class SplitControllerTests
     //--------------- Rename Split  ---------------
     /// <summary>
     /// Happy
-    ///     Renames the split "Genichiro" which has id 1, to "Start"
+    ///     Renames the split "Split 1" which has id 1, to "Start"
     ///     This should succeed, since the name isn't taken
     /// Taken
-    ///     Renames the split "Genichiro" which has id 1, to "Ogre"
+    ///     Renames the split "Split 1" which has id 1, to "Split 2"
     ///     This should fail, since the name is taken
     /// </summary>
     [Test]
@@ -110,7 +110,7 @@ public class SplitControllerTests
 
         // ----- Taken
         //Rename
-        var taken = await _splitController.RenameSplit(1, "Ogre");
+        var taken = await _splitController.RenameSplit(1, "Split 2");
         TestsHelper.SafetyChecks<ObjectResult>(taken);
 
         //Ensure
@@ -119,7 +119,7 @@ public class SplitControllerTests
 
     //--------------- Move Split  ---------------
     /// <summary>
-    /// Moves Sekiro's "Genichiro" split to throughout the run a couple of times 
+    /// Moves "Game 2"s "Split 1" split to throughout the run a couple of times 
     /// Should clamp requested index within bounds of list, and move the surrounding splits
     /// </summary>
     [Test]
@@ -144,10 +144,10 @@ public class SplitControllerTests
     //--------------- Delete Split  ---------------
     /// <summary>
     /// Happy
-    ///     Deletes the "Genichiro" split
+    ///     Deletes the "Split 1" split
     ///     This should succeed, since it still exists
     /// Gone
-    ///     Tries to delete the "Genichiro" split again
+    ///     Tries to delete the "Split 1" split again
     ///     This should fail, since it no longer exists
     /// </summary>
     [Test]
